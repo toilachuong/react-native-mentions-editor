@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { ActivityIndicator, FlatList, Animated, View } from "react-native";
+import { ActivityIndicator, FlatList, Animated, View, Text } from "react-native";
 
 import MentionListItem from "../MentionListItem";
 // Styles
-import styles from "./MentionListStyles";
+import styles, { widthPercentageToDP, heightPercentageToDP } from "./MentionListStyles";
 
 export class MentionList extends React.PureComponent {
   static propTypes = {
@@ -56,7 +56,7 @@ export class MentionList extends React.PureComponent {
           horizontal={false}
           ListEmptyComponent={
             <View style={styles.loaderContainer}>
-              <ActivityIndicator />
+              <Text style={{ fontSize: heightPercentageToDP(1.7) }}>Rien à mentionner (vous devez marquer votre ami ci-dessous avant de le mentionner ici)</Text>
             </View>
           }
           enableEmptySections={true}
