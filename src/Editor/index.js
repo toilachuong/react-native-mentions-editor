@@ -39,7 +39,7 @@ export class Editor extends React.Component {
       this.mentionsMap = map;
       msg = newValue;
       formattedMsg = this.formatText(newValue);
-      setTimeout(()=>{
+      setTimeout(() => {
         this.sendMessageToFooter(newValue);
       });
     }
@@ -177,7 +177,7 @@ export class Editor extends React.Component {
      * Open mentions list if user
      * start typing @ in the string anywhere.
      */
-    const menIndex = selection.start - 1;
+    const menIndex = Platform.OS === "ios" ? selection.start - 1 : selection.start;
     // const lastChar = inputText.substr(inputText.length - 1);
     const lastChar = inputText.substr(menIndex, 1);
     const wordBoundry =
@@ -517,14 +517,14 @@ export class Editor extends React.Component {
         {props.renderMentionList ? (
           props.renderMentionList(mentionListProps)
         ) : (
-          <MentionList
-            list={props.list}
-            keyword={state.keyword}
-            isTrackingStarted={state.isTrackingStarted}
-            onSuggestionTap={this.onSuggestionTap}
-            editorStyles={editorStyles}
-          />
-        )}
+            <MentionList
+              list={props.list}
+              keyword={state.keyword}
+              isTrackingStarted={state.isTrackingStarted}
+              onSuggestionTap={this.onSuggestionTap}
+              editorStyles={editorStyles}
+            />
+          )}
         <View style={[styles.container, editorStyles.mainContainer]}>
           <ScrollView
             ref={scroll => {
@@ -549,27 +549,27 @@ export class Editor extends React.Component {
                     {state.formattedText}
                   </Text>
                 ) : (
-                  <Text
-                    style={[
-                      styles.placeholderText,
-                      editorStyles.placeholderText
-                    ]}
-                  >
-                    {state.placeholder}
-                  </Text>
-                )}
+                    <Text
+                      style={[
+                        styles.placeholderText,
+                        editorStyles.placeholderText
+                      ]}
+                    >
+                      {state.placeholder}
+                    </Text>
+                  )}
               </View>
               <TextInput
                 ref={input => props.onRef && props.onRef(input)}
                 style={[styles.input, editorStyles.input]}
                 multiline
-                autoFocus
-                numberOfLines={100}
+                // autoFocus
+                numberOfLines={10}
                 name={"message"}
                 value={state.inputText}
                 onBlur={props.toggleEditor}
                 onChangeText={this.onChange}
-                selection={this.state.selection}
+                selection={Platform.OS === "ios" ? this.state.selection : null}
                 selectionColor={"#000"}
                 onSelectionChange={this.handleSelectionChange}
                 placeholder={state.placeholder}

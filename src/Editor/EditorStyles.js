@@ -1,11 +1,30 @@
 import { StyleSheet } from "react-native";
+import { PixelRatio, Dimensions, Alert } from "react-native";
+
+
+const { height, width } = Dimensions.get("window");
+/*responsive width screen(percentage) from dp to px*/
+export const widthPercentageToDP = widthPercent => {
+  const elemWidth =
+    typeof widthPercent === "number" ? widthPercent : parseFloat(widthPercent);
+  return PixelRatio.roundToNearestPixel((width * elemWidth) / 100);
+};
+/*responsive height screen(percentage) from dp to px*/
+export const heightPercentageToDP = heightPercent => {
+  const elemHeight =
+    typeof heightPercent === "number"
+      ? heightPercent
+      : parseFloat(heightPercent);
+  return PixelRatio.roundToNearestPixel((height * elemHeight) / 100);
+};
+
 
 export default StyleSheet.create({
   container: {
     backgroundColor: "#fff",
-    borderColor: "green",
-    borderWidth: 1,
-    width: 300
+    borderWidth: 0.5,
+    width: "100%",
+    height: heightPercentageToDP(20)
   },
   textContainer: {
     alignSelf: "stretch",
@@ -14,10 +33,8 @@ export default StyleSheet.create({
     maxHeight: 140
   },
   input: {
-    fontSize: 16,
+    fontSize: heightPercentageToDP(1.7),
     color: "#000",
-    fontWeight: "400",
-    paddingHorizontal: 20,
     minHeight: 40,
     position: "absolute",
     top: 0,
@@ -26,25 +43,25 @@ export default StyleSheet.create({
     width: "100%"
   },
   formmatedTextWrapper: {
+    color: "#000",
     minHeight: 40,
     position: "absolute",
     top: 0,
-    paddingHorizontal: 20,
+    width: "100%",
     paddingVertical: 5,
-    width: "100%"
+    color: "transparent",
   },
   formmatedText: {
-    fontSize: 16,
-    fontWeight: "400"
+    fontSize: heightPercentageToDP(1.7),
   },
   mention: {
-    fontSize: 16,
+    fontSize: heightPercentageToDP(1.7),
     fontWeight: "400",
     backgroundColor: "rgba(36, 77, 201, 0.05)",
-    color: "#244dc9"
+    color: "#216b5c"
   },
   placeholderText: {
-    color: "rgba(0, 0, 0, 0.1)",
-    fontSize: 16
+    color: "#999999",
+    fontSize: heightPercentageToDP(1.7),
   }
 });

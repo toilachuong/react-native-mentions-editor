@@ -27,12 +27,6 @@ export class MentionListItem extends React.PureComponent {
           style={[styles.suggestionItem, editorStyles.mentionListItemWrapper]}
           onPress={() => this.onSuggestionTap(user)}
         >
-          <Avatar
-            user={user}
-            wrapperStyles={styles.thumbnailWrapper}
-            charStyles={styles.thumbnailChar}
-          />
-
           <View style={[styles.text, editorStyles.mentionListItemTextWrapper]}>
             <Text style={[styles.title, editorStyles.mentionListItemTitle]}>
               {user.name}
