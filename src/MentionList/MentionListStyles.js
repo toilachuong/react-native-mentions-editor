@@ -24,6 +24,6 @@ export default StyleSheet.create({
   suggestionsPanelStyle: {},
   loaderContainer: { flex: 1 },
   mentionsListContainer: {
-    height: heightPercentageToDP(4)
+    maxHeight: heightPercentageToDP(10)
   }
 });
