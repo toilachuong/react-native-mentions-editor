@@ -56,7 +56,8 @@ export class MentionList extends React.PureComponent {
           horizontal={false}
           ListEmptyComponent={
             <View style={styles.loaderContainer}>
-              <Text style={{ fontSize: heightPercentageToDP(1.7) }}>Rien à mentionner (vous devez marquer votre ami ci-dessous avant de le mentionner ici)</Text>
+              <Text style={{ fontSize: heightPercentageToDP(1.7), marginBottom: heightPercentageToDP(1) }}>Rien à mentionner (vous devez marquer votre ami ci-dessous avant de le mentionner ici)</Text>
+              <ActivityIndicator />
             </View>
           }
           enableEmptySections={true}

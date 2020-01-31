@@ -13,6 +13,7 @@ import {
 import EU from "./EditorUtils";
 import styles from "./EditorStyles";
 import MentionList from "../MentionList";
+import { heightPercentageToDP } from './EditorStyles';
 
 export class Editor extends React.Component {
   static propTypes = {
@@ -96,7 +97,12 @@ export class Editor extends React.Component {
       });
       this.mentionsMap.clear();
     }
-
+    if (this.props.list.length === 2 && prevProps.list.length === 1 && this.state.isTrackingStarted) {
+      this.fixAddSuggestionsPanel()
+    }
+    if (this.props.list.length === 1 && prevProps.list.length > 1 && this.state.isTrackingStarted) {
+      this.fixMinusSuggestionPanel()
+    }
     if (EU.whenTrue(this.props, prevProps, "showMentions")) {
       //don't need to close on false; user show select it.
       this.onChange(this.state.inputText, true);
@@ -114,6 +120,18 @@ export class Editor extends React.Component {
 
   startTracking(menIndex) {
     this.isTrackingStarted = true;
+    this.openSuggestionsPanel();
+    this.menIndex = menIndex;
+    this.setState({
+      keyword: "",
+      menIndex,
+      isTrackingStarted: true
+    });
+  }
+
+  fixTracking(menIndex) {
+    this.isTrackingStarted = true;
+    this.fixSuggestionsPanel();
     this.menIndex = menIndex;
     this.setState({
       keyword: "",
@@ -124,7 +142,7 @@ export class Editor extends React.Component {
 
   stopTracking() {
     this.isTrackingStarted = false;
-    // this.closeSuggestionsPanel();
+    this.closeSuggestionsPanel();
     this.setState({
       isTrackingStarted: false
     });
@@ -186,7 +204,8 @@ export class Editor extends React.Component {
         : true;
     if (lastChar === this.state.trigger && wordBoundry) {
       this.startTracking(menIndex);
-    } else if (lastChar.trim() === "" && this.state.isTrackingStarted) {
+    }
+    else if (lastChar.trim() === "" && this.state.isTrackingStarted) {
       this.stopTracking();
     }
     this.previousChar = lastChar;
@@ -498,10 +517,38 @@ export class Editor extends React.Component {
     }
   };
 
+
+  openSuggestionsPanel() {
+    Animated.timing(this.state.suggestionRowHeight, {
+      toValue: this.props.list.length < 2 ? heightPercentageToDP(10) : heightPercentageToDP(16), //height
+      duration: 250,
+    }).start();
+  }
+
+  fixAddSuggestionsPanel() {
+    Animated.timing(this.state.suggestionRowHeight, {
+      toValue: heightPercentageToDP(16),
+      duration: 250,
+    }).start();
+  }
+
+  fixMinusSuggestionPanel() {
+    Animated.timing(this.state.suggestionRowHeight, {
+      toValue: heightPercentageToDP(10),
+      duration: 250,
+    }).start();
+  }
+
+  closeSuggestionsPanel() {
+    Animated.timing(this.state.suggestionRowHeight, {
+      toValue: 0,
+      duration: 250,
+    }).start();
+  }
+
   render() {
     const { props, state } = this;
     const { editorStyles = {} } = props;
-
     if (!props.showEditor) return null;
 
     const mentionListProps = {
@@ -517,13 +564,21 @@ export class Editor extends React.Component {
         {props.renderMentionList ? (
           props.renderMentionList(mentionListProps)
         ) : (
-            <MentionList
-              list={props.list}
-              keyword={state.keyword}
-              isTrackingStarted={state.isTrackingStarted}
-              onSuggestionTap={this.onSuggestionTap}
-              editorStyles={editorStyles}
-            />
+            <Animated.View
+              style={[
+                styles.shadow,
+                { height: state.suggestionRowHeight },
+                editorStyles.mentionsListWrapper,
+              ]}
+            >
+              <MentionList
+                list={props.list}
+                keyword={state.keyword}
+                isTrackingStarted={state.isTrackingStarted}
+                onSuggestionTap={this.onSuggestionTap}
+                editorStyles={editorStyles}
+              />
+            </Animated.View>
           )}
         <View style={[styles.container, editorStyles.mainContainer]}>
           <ScrollView
@@ -535,48 +590,22 @@ export class Editor extends React.Component {
             }}
             style={[styles.editorContainer, editorStyles.editorContainer]}
           >
-            <View style={[{ height: this.state.editorHeight }]}>
-              <View
-                style={[
-                  styles.formmatedTextWrapper,
-                  editorStyles.inputMaskTextWrapper
-                ]}
-              >
-                {state.formattedText !== "" ? (
-                  <Text
-                    style={[styles.formmatedText, editorStyles.inputMaskText]}
-                  >
-                    {state.formattedText}
-                  </Text>
-                ) : (
-                    <Text
-                      style={[
-                        styles.placeholderText,
-                        editorStyles.placeholderText
-                      ]}
-                    >
-                      {state.placeholder}
-                    </Text>
-                  )}
-              </View>
-              <TextInput
-                ref={input => props.onRef && props.onRef(input)}
-                style={[styles.input, editorStyles.input]}
-                multiline
-                // autoFocus
-                numberOfLines={10}
-                name={"message"}
-                value={state.inputText}
-                onBlur={props.toggleEditor}
-                onChangeText={this.onChange}
-                selection={Platform.OS === "ios" ? this.state.selection : null}
-                selectionColor={"#000"}
-                onSelectionChange={this.handleSelectionChange}
-                placeholder={state.placeholder}
-                onContentSizeChange={this.onContentSizeChange}
-                scrollEnabled={false}
-              />
-            </View>
+            <TextInput
+              ref={input => props.onRef && props.onRef(input)}
+              style={[styles.input, editorStyles.input]}
+              multiline
+              // autoFocus
+              name={"message"}
+              value={state.inputText}
+              onBlur={props.toggleEditor}
+              onChangeText={this.onChange}
+              selection={Platform.OS === "ios" ? this.state.selection : null}
+              selectionColor={"#000"}
+              onSelectionChange={this.handleSelectionChange}
+              placeholder={state.placeholder}
+              onContentSizeChange={this.onContentSizeChange}
+              scrollEnabled={false}
+            />
           </ScrollView>
         </View>
       </View>

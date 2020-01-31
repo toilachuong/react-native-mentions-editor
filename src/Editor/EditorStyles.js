@@ -18,13 +18,12 @@ export const heightPercentageToDP = heightPercent => {
   return PixelRatio.roundToNearestPixel((height * elemHeight) / 100);
 };
 
-
 export default StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     borderWidth: 0.5,
     width: "100%",
-    height: heightPercentageToDP(20)
+    height: heightPercentageToDP(20),
   },
   textContainer: {
     alignSelf: "stretch",
@@ -33,14 +32,10 @@ export default StyleSheet.create({
     maxHeight: 140
   },
   input: {
-    fontSize: heightPercentageToDP(1.7),
-    color: "#000",
-    minHeight: 40,
-    position: "absolute",
-    top: 0,
-    color: "transparent",
-    alignSelf: "stretch",
-    width: "100%"
+    textAlignVertical: "top",
+    fontSize: heightPercentageToDP(1.8),
+    paddingTop: widthPercentageToDP(1),
+    height: heightPercentageToDP(20),
   },
   formmatedTextWrapper: {
     color: "#000",
@@ -58,9 +53,11 @@ export default StyleSheet.create({
     fontSize: heightPercentageToDP(1.7),
     fontWeight: "400",
     backgroundColor: "rgba(36, 77, 201, 0.05)",
-    color: "#216b5c"
+    color: "#216b5c",
+
   },
   placeholderText: {
+
     color: "#999999",
     fontSize: heightPercentageToDP(1.7),
   }
